@@ -1,5 +1,5 @@
 # USAGE
-# python blobdetection_tracking.py --image1 data/Right2.png --image2 data/Left2.png
+# python blobdetection_tracking.py --image1 data/Right2.jpg --image2 data/Left2.jpg
 
 # import the necessary packages
 import argparse
@@ -21,7 +21,6 @@ def center(image):
 	for c in cnts:
 		# compute the center of the contour
 		M = cv2.moments(c)
-		# print(M)
 		cX = int(M["m10"] / M["m00"])
 		cY = int(M["m01"] / M["m00"])
 
@@ -34,7 +33,7 @@ def center(image):
 		coordinates.append([cX, cY])
 
 		# show the image
-		cv2.imshow("Image", image)
+		# cv2.imshow("Image", image)
 
 	if i == 0:
 		print('No object detected')
@@ -56,7 +55,13 @@ args = vars(ap.parse_args())
 # load the image, convert it to grayscale, blur it slightly,
 # and threshold it
 image = cv2.imread(args["image1"])
+if image is None:
+    print('Could not open or find the image1:', args.input)
+    exit(0)
 image2 = cv2.imread(args["image2"])
+if image2 is None:
+    print('Could not open or find the image2:', args.input)
+    exit(0)
 results1 = center(image)
 results2 = center(image2)
 xCoord = []
@@ -81,7 +86,7 @@ else :
 			r = r+1
 		else:
 			l = l+1
-print(yCoord)
+# print(yCoord)
 
 if r > l:
 	print("camera goes to the right")

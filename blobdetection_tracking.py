@@ -6,11 +6,11 @@ import argparse
 import imutils
 import cv2
 
-# variable declarations
-coordinates = []
 
 def center(image):
+    # variable declarations
     blobsCounter = 0
+    coordinates = []
     # convert the image to grayscale, blur it slightly,
     # and threshold it
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -43,10 +43,10 @@ def center(image):
         # show the image
         # cv2.imshow("Image", image)
 
-    # if blobsCounter == 0:
-    #     print('No object detected')
-    # else:
-    #     print('Objects detected: ', blobsCounter)
+    if blobsCounter == 0:
+        print('No object detected')
+    else:
+        print('Objects detected: ', blobsCounter)
         # print(coordinates)
     # cv2.imwrite("results/blobdetection_centers.jpg", image)
     # cv2.waitKey(0)
@@ -62,8 +62,8 @@ ap.add_argument("-i2", "--image2", required=True,
 args = vars(ap.parse_args())
 
 ############### LOADING IMAGES ###########################
-image = cv2.imread(args["image1"])
-if image is None:
+image1 = cv2.imread(args["image1"])
+if image1 is None:
     print('Could not open or find the image1:', args.input)
     exit(0)
 image2 = cv2.imread(args["image2"])
@@ -72,38 +72,34 @@ if image2 is None:
     exit(0)
 
 #### Find the contours and centers' coordinates of the blobs in these images ####
-results1 = center(image)
+results1 = center(image1)
 results2 = center(image2)
-
+# print(results1)
+# print(results2)
 # Save the detections in the results folder
-cv2.imwrite("results/blobdetection_image1.jpg", image)
+cv2.imwrite("results/blobdetection_image1.jpg", image1)
 cv2.imwrite("results/blobdetection_image2.jpg", image2)
 
 
 ########### Find out if the camera goes to the left or right #################
 xCoord = []
 # yCoord = []
-right = 0
-left = 0
+test = 0
 
 if len(results1) < len(results2):
     for i in range(len(results1)):
         xCoord.append(results1[i][0] - results2[i][0])
         # yCoord.append(results1[i][1] - results2[i][1])
-        if xCoord[i] > 0:
-            right = right+1
-        else:
-            left = left+1
+        test = test + xCoord[i]
 else:
     for i in range(len(results2)):
         xCoord.append(results1[i][0] - results2[i][0])
+        test = test + xCoord[i]
         # yCoord.append(results1[i][1] - results2[i][1])
-        if xCoord[i] > 0:
-            right = right+1
-        else:
-            left = left+1
 
-if right > left:
+# print(xCoord)
+print(test)
+if test > 0:
     print("camera goes to the right")
 else:
     print('camera goes to the left')

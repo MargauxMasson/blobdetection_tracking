@@ -6,10 +6,10 @@ import argparse
 import imutils
 import cv2
 
+# variable declarations
+coordinates = []
 
 def center(image):
-	# variable declarations
-	coordinates = []
     blobsCounter = 0
     # convert the image to grayscale, blur it slightly,
     # and threshold it
@@ -33,11 +33,11 @@ def center(image):
             # draw the contour and center of the shape on the image
             cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
             cv2.circle(image, (cX, cY), 7, (255, 255, 255), -1)
-            cv2.putText(image, str(i), (cX - 20, cY - 20),
+            cv2.putText(image, str(blobsCounter), (cX - 20, cY - 20),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-			# increment number of blobs found
+            # increment number of blobs found
             blobsCounter = blobsCounter+1
-			# Save coordinates in coordinates
+            # Save coordinates in coordinates
             coordinates.append([cX, cY])
 
         # show the image
